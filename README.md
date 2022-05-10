@@ -2,16 +2,16 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/NivaldoFarias/bootstore-backend">
+  <a href="https://github.com/NivaldoFarias/git--store-backend">
     <img src="" alt="Logo" width="130">
   </a>
 
-<h3 align="center">MyWallet Project | Backend</h3>
+<h3 align="center">Git --store Project | Backend</h3>
   <h6 align="center">WIP</h6>
   <p align="center">
     Backend Development Project 
     <br />
-    <a href="https://github.com/NivaldoFarias/bootstore-backend/tree/main/app.js"><strong>Browse JS code»</strong></a>
+    <a href="https://github.com/NivaldoFarias/git--store-backend/tree/main/app.js"><strong>Browse JS code»</strong></a>
 </div>
 
 <!-- ![Banner](https://github.com/NivaldoFarias/projeto10-trackit/blob/main/src/assets/images/trackit-showroom.png) -->

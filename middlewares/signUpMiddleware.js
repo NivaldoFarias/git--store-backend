@@ -1,11 +1,12 @@
 import db from '../database/mongoClient.js';
-import signUpSchema from '../models/signUpSchema.js';
+import SignUpSchema from '../models/signUpSchema.js';
+
 import { ERROR } from '../blueprint/chalk.js';
 
-export async function validateSignUp(req, res, next) {
+export async function validateSignUpSchema(req, res, next) {
   const { body } = req; // body = user
 
-  const typoValidation = signUpSchema.validate(body).error;
+  const typoValidation = SignUpSchema.validate(body).error;
   if (typoValidation) {
     console.log(`${ERROR} Invalid input`);
     res.status(422).send({
@@ -22,7 +23,6 @@ export async function validateSignUp(req, res, next) {
 
 export async function validateEmail(req, res, next) {
   const { body } = res.locals;
-  console.log(body);
   const user = await db.collection('users').findOne({ email: body.email });
 
   if (user) {

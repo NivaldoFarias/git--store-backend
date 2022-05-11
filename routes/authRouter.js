@@ -1,6 +1,6 @@
 import { Router } from 'express';
 // controllers
-import { register } from '../controllers/authController.js';
+import { register, login } from '../controllers/authController.js';
 // middlewares
 import {
   validateSignUp,
@@ -10,5 +10,6 @@ import {
 const authRouter = Router();
 
 authRouter.post('/api/auth/sign-up', validateSignUp, validateEmail, register);
+authRouter.post('/api/auth/sign-in', login);
 
 export default authRouter;

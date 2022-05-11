@@ -9,6 +9,6 @@ import {
 
 const authRouter = Router();
 
-authRouter.post('/auth/sign-up', validateSignUp, validateEmail, register);
+authRouter.post('/api/auth/sign-up', validateSignUp, validateEmail, register);
 
 export default authRouter;

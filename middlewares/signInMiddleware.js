@@ -27,7 +27,7 @@ export async function validateSignInSchema(req, res, next) {
 
 export async function findUser(req, res, next) {
   const { email } = res.locals.body;
-  const user = await db.collection('users').findOne({ email });
+  const user = await db.collection('accounts').findOne({ email });
 
   // checa se o usuario ja e cadastrado
   if (!user) {

@@ -23,7 +23,7 @@ export async function validateSignUpSchema(req, res, next) {
 
 export async function validateEmail(req, res, next) {
   const { body } = res.locals;
-  const user = await db.collection('users').findOne({ email: body.email });
+  const user = await db.collection('accounts').findOne({ email: body.email });
 
   if (user) {
     console.log(`${ERROR} Email already registered`);

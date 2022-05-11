@@ -14,7 +14,7 @@ export async function register(req, res) {
   const cryptPass = bcrypt.hashSync(body.password, 10);
 
   try {
-    await db.collection('users').insertOne({ ...body, password: cryptPass });
+    await db.collection('accounts').insertOne({ ...body, password: cryptPass });
     res.sendStatus(201);
   } catch (e) {
     console.log(`${ERROR} Cannot connect to db\n${e}`);

@@ -3,7 +3,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/NivaldoFarias/git--store-backend">
-    <img src="" alt="Logo" width="130">
+    <img src="https://github.com/NivaldoFarias/git--store-frontend/blob/main/src/assets/git--store-logo.png" alt="Logo" width="140">
   </a>
 
 <h3 align="center">Git --store Project | Backend</h3>

@@ -35,6 +35,10 @@ export async function login(req, res) {
       token,
       _id: sessionId,
       user_id: user._id,
+      cart: {
+        status: 'pending',
+        items: [],
+      },
     });
     res.status(200).send(token);
   } catch (e) {

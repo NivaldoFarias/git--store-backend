@@ -1,12 +1,12 @@
-import chalk from 'chalk';
-import { MongoClient, ServerApiVersion } from 'mongodb';
-import dotenv from 'dotenv';
+import chalk from "chalk";
+import { MongoClient, ServerApiVersion } from "mongodb";
+import dotenv from "dotenv";
 
-import { DB_INFO, ERROR } from '../blueprint/chalk.js';
+import { DB_INFO, ERROR } from "../blueprint/chalk.js";
 
 dotenv.config();
 
-let db = null;  //eslint-disable-line
+let db = null; //eslint-disable-line
 const mongoClient = new MongoClient(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,

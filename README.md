@@ -11,7 +11,9 @@
   <p align="center">
     Backend Development Project 
     <br />
-    <a href="https://github.com/NivaldoFarias/git--store-backend/tree/main/app.js"><strong>Browse JS code»</strong></a>
+    <a href="https://github.com/NivaldoFarias/git--store-backend/tree/main/app.js"><strong>Browse code»</strong></a>
+    -
+    <a href="https://github.com/NivaldoFarias/git--store-frontend#readme"><strong>Front end code»</strong></a>
 </div>
 
 <!-- ![Banner](https://github.com/NivaldoFarias/projeto10-trackit/blob/main/src/assets/images/trackit-showroom.png) -->

@@ -19,7 +19,7 @@ authRouter.post(
   '/api/auth/sign-up',
   validateSignUpSchema,
   validateEmail,
-  register
+  register,
 );
 authRouter.post(
   '/api/auth/sign-in',
@@ -27,7 +27,7 @@ authRouter.post(
   findUser,
   validatePassword,
   createToken,
-  login
+  login,
 );
 
 export default authRouter;

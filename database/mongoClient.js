@@ -1,8 +1,8 @@
-import chalk from "chalk";
-import { MongoClient, ServerApiVersion } from "mongodb";
-import dotenv from "dotenv";
+import chalk from 'chalk';
+import { MongoClient, ServerApiVersion } from 'mongodb';
+import dotenv from 'dotenv';
 
-import { DATABASE, ERROR } from "../blueprint/chalk.js";
+import { DATABASE, ERROR } from '../blueprint/chalk.js';
 
 dotenv.config();
 
@@ -17,8 +17,8 @@ try {
   db = mongoClient.db(process.env.DATABASE);
   console.log(
     chalk.blue(
-      `${DATABASE} Connected to database ${chalk.bold.blue(db.databaseName)}`
-    )
+      `${DATABASE} Connected to database ${chalk.bold.blue(db.databaseName)}`,
+    ),
   );
 } catch (err) {
   console.log(chalk.red(`${ERROR} ${err}`));

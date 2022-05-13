@@ -25,7 +25,7 @@ export async function validateSignInSchema(req, res, next) {
   next();
 }
 
-export async function findUser(req, res, next) {
+export async function findUser(_req, res, next) {
   const { email } = res.locals.body;
   const user = await db.collection('accounts').findOne({ email });
 
@@ -42,7 +42,7 @@ export async function findUser(req, res, next) {
   next();
 }
 
-export async function validatePassword(req, res, next) {
+export async function validatePassword(_req, res, next) {
   const { user } = res.locals;
   const { password } = res.locals.body;
 
@@ -58,7 +58,7 @@ export async function validatePassword(req, res, next) {
   next();
 }
 
-export async function createToken(req, res, next) {
+export async function createToken(_req, res, next) {
   const sessionId = new ObjectId();
   const data = { session_id: sessionId };
   const secretKey = process.env.JWT_SECRET;

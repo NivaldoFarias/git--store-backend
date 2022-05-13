@@ -1,4 +1,4 @@
-import joi from 'joi';
+import joi from "joi";
 
 const SignUpSchema = joi
   .object({
@@ -8,8 +8,8 @@ const SignUpSchema = joi
       .string()
       .pattern(/^[a-zA-Z0-9]{3,30}$/)
       .required(),
-    confirm_password: joi.ref('password'),
+    confirm_password: joi.ref("password"),
   })
-  .with('confirm_password', 'password');
+  .with("confirm_password", "password");
 
 export default SignUpSchema;

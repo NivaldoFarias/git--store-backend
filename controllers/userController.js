@@ -1,10 +1,9 @@
-import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import chalk from 'chalk';
 import { ObjectId } from 'mongodb';
 
 import db from '../database/mongoClient.js';
-import { ERROR } from '../blueprint/chalk.js';
+import { DATABASE, ERROR } from '../blueprint/chalk.js';
 
 dotenv.config();
 
@@ -14,7 +13,7 @@ export async function getAll(_req, res) {
     res.send(
       users.map((user) => ({
         name: user.name,
-      }))
+      })),
     );
   } catch (err) {
     console.log(chalk.red(`${ERROR} ${err}`));
@@ -25,39 +24,11 @@ export async function getAll(_req, res) {
   }
 }
 
-export async function getCart(req, res) {
-  const { authorization } = req.headers;
-  const token = authorization?.replace('Bearer ', '').trim();
-  const secretKey = process.env.JWT_SECRET;
-  const data = jwt.verify(token, secretKey);
+export async function getCart(_req, res) {
+  const session = res.locals.session;
 
-  if (!data) {
-    res.status(401).send({
-      message: 'Invalid token',
-      type: 'unathorized',
-    });
-    return;
-  }
-
-  try {
-    const session = await db
-      .collection('sessions')
-      .findOne({ _id: new ObjectId(data.session_id) });
-
-    if (!session) {
-      res.status(401).send({
-        message: 'Session closed/not found',
-        type: 'unathorized',
-      });
-      return;
-    }
-    console.log(session.cart.items);
-
-    res.status(200).send(session.cart.items);
-  } catch (e) {
-    console.log(e);
-    res.sendStatus(500);
-  }
+  console.log(session.cart.items);
+  res.status(200).send(session.cart.items);
 }
 
 export async function updateCart(req, res) {
@@ -65,49 +36,14 @@ export async function updateCart(req, res) {
   // TODO Verificar a quantidade disponivel de um produto e impedir de adicionar caso acabe o estoque
   // TODO Criar funcao que desliga as sessoes ativas e caso a compra nao tenha sido efetuada, atualiza o estoque
   const { body } = req; // title, image, price, _id, quantity
-  const { authorization } = req.headers;
-  const token = authorization?.replace('Bearer ', '').trim();
-  const secretKey = process.env.JWT_SECRET;
-  const data = jwt.verify(token, secretKey);
+  const { cart } = res.locals.session;
+  const data = res.locals.data;
 
   console.log(body);
 
-  if (!data) {
-    res.status(401).send({
-      message: 'Invalid token',
-      type: 'unathorized',
-    });
-    return;
-  }
-
   try {
-    const session = await db
-      .collection('sessions')
-      .findOne({ _id: new ObjectId(data.session_id) });
-
-    if (!session) {
-      res.status(401).send({
-        message: 'Session closed/not found',
-        type: 'unathorized',
-      });
-      return;
-    }
-
-    const user = await db
-      .collection('accounts')
-      .findOne({ _id: new ObjectId(session.user_id) });
-
-    if (!user) {
-      res.status(404).send({
-        message: 'User not found',
-        type: 'not found',
-      });
-      return;
-    }
-
-    const { cart } = session;
     const productIndex = cart.items.findIndex(
-      (element) => element._id === body._id
+      (element) => element._id === body._id,
     );
     console.log(productIndex);
 
@@ -117,7 +53,7 @@ export async function updateCart(req, res) {
         .collection('sessions')
         .updateOne(
           { _id: new ObjectId(data.session_id) },
-          { $push: { 'cart.items': body } }
+          { $push: { 'cart.items': body } },
         );
     } else {
       cart.items[productIndex].quantity += 1;
@@ -125,9 +61,13 @@ export async function updateCart(req, res) {
         .collection('sessions')
         .updateOne({ _id: new ObjectId(data.session_id) }, { $set: { cart } });
     }
-
+    console.log(`${DATABASE} cart updated`);
     res.status(200).send(body);
-  } catch (e) {
-    console.log(e);
+  } catch (err) {
+    console.log(chalk.red(`${ERROR} ${err}`));
+    res.status(500).send({
+      message: 'Internal error while getting cart',
+      detail: err,
+    });
   }
 }

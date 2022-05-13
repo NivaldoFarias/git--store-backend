@@ -1,4 +1,5 @@
 import { ObjectId } from 'mongodb';
+import chalk from 'chalk';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
@@ -8,15 +9,19 @@ import SignInSchema from '../models/signInSchema.js';
 import { ERROR } from '../blueprint/chalk.js';
 
 export async function validateSignInSchema(req, res, next) {
-  const { body } = req;
+  const { password } = req.body; // body = user
+  const email = stripHtml(req.body.email).result.trim();
 
-  const typoValidation = SignInSchema.validate(body);
+  const validate = SignInSchema.validate(
+    { email, password },
+    { abortEarly: false },
+  );
 
-  if (typoValidation.error) {
-    console.log(`${ERROR} Invalid input`);
+  if (validate.error) {
+    console.log(chalk.bold.red(`${ERROR} Invalid input`));
     res.status(400).send({
       message: 'Invalid input',
-      type: 'joi',
+      details: `${validate.error.details.map((e) => e.message).join(', ')}`,
     });
     return;
   }
@@ -31,10 +36,10 @@ export async function findUser(_req, res, next) {
 
   // checa se o usuario ja e cadastrado
   if (!user) {
-    console.log(`${ERROR} User not found`);
+    console.log(chalk.bold.red(`${ERROR} User not found`));
     res.status(404).send({
       message: 'User is not registered',
-      type: 'not found',
+      detail: 'If user is already registered, ensure that the email is correct',
     });
     return;
   }
@@ -47,10 +52,10 @@ export async function validatePassword(_req, res, next) {
   const { password } = res.locals.body;
 
   if (!bcrypt.compareSync(password, user.password)) {
-    console.log(`${ERROR} Wrong password`);
+    console.log(chalk.bold.red(`${ERROR} Wrong password`));
     res.status(401).send({
       message: 'Incorrect password',
-      type: 'unauthorized',
+      detail: 'Ensure that the password is correct',
     });
     return;
   }

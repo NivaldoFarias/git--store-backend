@@ -3,18 +3,19 @@ import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
 
 import db from '../database/mongoClient.js';
-import { ERROR } from '../blueprint/chalk.js';
+import { DATABASE, ERROR } from '../blueprint/chalk.js';
 
 dotenv.config();
 
 // TODO data sanitization
 
-export async function register(req, res) {
+export async function register(_req, res) {
   const { body } = res.locals;
   const cryptPass = bcrypt.hashSync(body.password, 10);
 
   try {
     await db.collection('accounts').insertOne({ ...body, password: cryptPass });
+    console.log(`${DATABASE} - ${body.email} registered successfully`);
     res.sendStatus(201);
   } catch (e) {
     console.log(`${ERROR} Cannot connect to db\n${e}`);
@@ -22,7 +23,7 @@ export async function register(req, res) {
   }
 }
 
-export async function login(req, res) {
+export async function login(_req, res) {
   const { user, token, sessionId } = res.locals;
 
   try {
@@ -40,6 +41,7 @@ export async function login(req, res) {
         items: [],
       },
     });
+    console.log(`${DATABASE} - ${user.email} logged in successfully`);
     res.status(200).send(token);
   } catch (e) {
     console.log(`${ERROR} Cannot connect to db\n${e}`);

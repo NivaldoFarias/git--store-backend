@@ -127,10 +127,11 @@ export async function areItemsInStock(_req, res, next) {
   const products = res.locals.products;
   let notInStock = [];
 
-  for (let i = 0; i < items.length; i += 1) {
+  for (let i = 0; i < items.length; i++) {
     if (products[i].inventory < items[i].volume) {
       notInStock.push(products[i].title);
     }
+    items[i].title = products[i].title;
   }
   if (notInStock.length > 0) {
     console.log(chalk.red(`${ERROR} Item not in stock`));
@@ -139,5 +140,6 @@ export async function areItemsInStock(_req, res, next) {
       detail: `${notInStock.join(', ')}`,
     });
   }
+  res.locals.items = items;
   next();
 }

@@ -20,13 +20,6 @@ export async function getProducts(_req, res) {
   }
 }
 
-export async function getCart(_req, res) {
-  const session = res.locals.session;
-
-  console.log(session.cart.items);
-  res.status(200).send(session.cart.items);
-}
-
 export async function purchase(_req, res) {
   // TODO Verificar a quantidade disponivel de um produto e impedir de adicionar caso acabe o estoque
   // TODO Criar funcao que desliga as sessoes ativas e caso a compra nao tenha sido efetuada, atualiza o estoque
@@ -36,6 +29,23 @@ export async function purchase(_req, res) {
   const amount = res.locals.amount;
 
   try {
+    for (let i = 0; i < items.length; i++) {
+      try {
+        await db
+          .collection('products')
+          .updateOne(
+            { _id: new ObjectId(items[i].id) },
+            { $inc: { inventory: -items[i].volume } },
+          );
+      } catch (err) {
+        console.log(chalk.red(`${ERROR} ${err}`));
+        res.status(500).send({
+          message: 'Internal error while updating products',
+          detail: err,
+        });
+      }
+    }
+
     await db
       .collection('accounts')
       .updateOne(

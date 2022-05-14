@@ -5,6 +5,8 @@ import {
   requireToken,
   isUserOnline,
   userExists,
+  itemsExists,
+  areItemsInStock,
 } from '../middlewares/userMiddleware.js';
 import * as user from '../controllers/userController.js';
 
@@ -17,6 +19,8 @@ userRouter.put(
   requireToken,
   userExists,
   isUserOnline,
+  itemsExists,
+  areItemsInStock,
   user.purchase,
 );
 export default userRouter;

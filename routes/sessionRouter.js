@@ -14,7 +14,7 @@ dotenv.config();
 
 const userRouter = express.Router();
 userRouter.get('/api/products', session.getProducts);
-userRouter.put(
+userRouter.post(
   '/api/session/purchase',
   requireToken,
   userExists,

@@ -7,27 +7,29 @@ import { DATABASE, ERROR } from '../blueprint/chalk.js';
 
 dotenv.config();
 
-// TODO data sanitization
-
-export async function register(_req, res) {
-  const { body } = res.locals;
-  const cryptPass = bcrypt.hashSync(body.password, 10);
+export async function signUp(_req, res) {
+  const { name, email, password } = res.locals;
+  const cryptPass = bcrypt.hashSync(password, 10);
 
   try {
-    await db.collection('accounts').insertOne({ ...body, password: cryptPass });
-    console.log(`${DATABASE} - ${body.email} registered successfully`);
+    await db
+      .collection('accounts')
+      .insertOne({ name, email, password: cryptPass });
+    console.log(`${DATABASE} - ${email} registered successfully`);
     res.sendStatus(201);
-  } catch (e) {
-    console.log(`${ERROR} Cannot connect to db\n${e}`);
-    res.sendStatus(500);
+  } catch (err) {
+    console.log(chalk.red(`${ERROR} ${err}`));
+    return res.status(500).send({
+      message: 'Internal server error while registering',
+      detail: `${err}`,
+    });
   }
 }
 
-export async function login(_req, res) {
+export async function signIn(_req, res) {
   const { user, token, sessionId } = res.locals;
 
   try {
-    // encerra a sessao em outro dispositivo
     await db
       .collection('sessions')
       .deleteOne({ user_id: new ObjectId(user._id) });
@@ -36,15 +38,15 @@ export async function login(_req, res) {
       token,
       _id: sessionId,
       user_id: user._id,
-      cart: {
-        status: 'pending',
-        items: [],
-      },
+      active: true,
     });
-    console.log(`${DATABASE} - ${user.email} logged in successfully`);
+    console.log(`${DATABASE} - ${user.email} signed in successfully`);
     res.status(200).send(token);
-  } catch (e) {
-    console.log(`${ERROR} Cannot connect to db\n${e}`);
-    res.sendStatus(500);
+  } catch (err) {
+    console.log(chalk.red(`${ERROR} ${err}`));
+    return res.status(500).send({
+      message: 'Internal server error while signing in',
+      detail: `${err}`,
+    });
   }
 }

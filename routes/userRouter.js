@@ -5,19 +5,18 @@ import {
   requireToken,
   isUserOnline,
   userExists,
-} from './../middlewares/cartMiddleware.js';
+} from '../middlewares/userMiddleware.js';
 import * as user from '../controllers/userController.js';
 
 dotenv.config();
 
 const userRouter = express.Router();
-userRouter.get('/api/users/all', user.getAll);
-userRouter.get('/api/users/cart', requireToken, isUserOnline, user.getCart);
+userRouter.get('/api/products', user.getProducts);
 userRouter.put(
-  '/api/users/cart',
+  '/api/user/purchase',
   requireToken,
-  isUserOnline,
   userExists,
-  user.updateCart,
+  isUserOnline,
+  user.purchase,
 );
 export default userRouter;

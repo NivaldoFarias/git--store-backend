@@ -2,19 +2,15 @@ import dotenv from 'dotenv';
 import chalk from 'chalk';
 import { ObjectId } from 'mongodb';
 
-import db from '../database/mongoClient.js';
-import { DATABASE, ERROR } from '../blueprint/chalk.js';
+import db from './../database/mongoClient.js';
+import { DATABASE, ERROR } from './../blueprint/chalk.js';
 
 dotenv.config();
 
-export async function getAll(_req, res) {
+export async function getProducts(_req, res) {
   try {
-    const users = await db.collection('accounts').find().toArray();
-    res.send(
-      users.map((user) => ({
-        name: user.name,
-      })),
-    );
+    const products = await db.collection('products').find().toArray();
+    res.status(200).send(products);
   } catch (err) {
     console.log(chalk.red(`${ERROR} ${err}`));
     res.status(500).send({
@@ -31,38 +27,23 @@ export async function getCart(_req, res) {
   res.status(200).send(session.cart.items);
 }
 
-export async function updateCart(req, res) {
-  console.log('update cart');
+export async function purchase(_req, res) {
   // TODO Verificar a quantidade disponivel de um produto e impedir de adicionar caso acabe o estoque
   // TODO Criar funcao que desliga as sessoes ativas e caso a compra nao tenha sido efetuada, atualiza o estoque
-  const { body } = req; // title, image, price, _id, quantity
-  const { cart } = res.locals.session;
+  // body: { items: array de _ids dos produtos na collection products; amount: total pago }
   const data = res.locals.data;
-
-  console.log(body);
+  const items = res.locals.items;
+  const amount = res.locals.amount;
 
   try {
-    const productIndex = cart.items.findIndex(
-      (element) => element._id === body._id,
-    );
-    console.log(productIndex);
-
-    // checa se o produto ja esta no carrinho
-    if (productIndex === -1) {
-      await db
-        .collection('sessions')
-        .updateOne(
-          { _id: new ObjectId(data.session_id) },
-          { $push: { 'cart.items': body } },
-        );
-    } else {
-      cart.items[productIndex].quantity += 1;
-      await db
-        .collection('sessions')
-        .updateOne({ _id: new ObjectId(data.session_id) }, { $set: { cart } });
-    }
-    console.log(`${DATABASE} cart updated`);
-    res.status(200).send(body);
+    await db
+      .collection('accounts')
+      .updateOne(
+        { _id: new ObjectId(data.session_id) },
+        { $push: { history: { items, amount, date: new Date() } } },
+      );
+    console.log(`${DATABASE} user history updated`);
+    res.statusStatus(200);
   } catch (err) {
     console.log(chalk.red(`${ERROR} ${err}`));
     res.status(500).send({

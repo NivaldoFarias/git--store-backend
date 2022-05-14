@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import { stripHtml } from 'string-strip-html';
 
 import db from '../database/mongoClient.js';
-import SignUpSchema from '../models/signUpSchema.js';
+import SignUpSchema from '../models/signUp.js';
 import { ERROR } from '../blueprint/chalk.js';
 
 export async function validateSignUpSchema(req, res, next) {

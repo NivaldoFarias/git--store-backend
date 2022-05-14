@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
 import db from '../database/mongoClient.js';
-import SignInSchema from '../models/signInSchema.js';
+import SignInSchema from '../models/signIn.js';
 
 import { ERROR } from '../blueprint/chalk.js';
 

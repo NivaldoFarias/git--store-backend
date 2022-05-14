@@ -21,9 +21,7 @@ export async function getProducts(_req, res) {
 }
 
 export async function purchase(_req, res) {
-  const data = res.locals.data;
-  const items = res.locals.items;
-  const amount = res.locals.amount;
+  const { items, amount, session } = res.locals;
 
   try {
     for (let i = 0; i < items.length; i++) {
@@ -31,14 +29,14 @@ export async function purchase(_req, res) {
         await db
           .collection('products')
           .updateOne(
-            { _id: new ObjectId(items[i].id) },
+            { _id: new ObjectId(items[i].product_id) },
             { $inc: { inventory: -items[i].volume } },
           );
       } catch (err) {
         console.log(chalk.red(`${ERROR} ${err}`));
         res.status(500).send({
           message: 'Internal error while updating products',
-          detail: err,
+          detail: err + '',
         });
       }
     }
@@ -46,16 +44,16 @@ export async function purchase(_req, res) {
     await db
       .collection('accounts')
       .updateOne(
-        { _id: new ObjectId(data.session_id) },
-        { $push: { history: { items, amount, date: new Date() } } },
+        { _id: new ObjectId(session.user_id) },
+        { $push: { transactions: { items, amount, date: new Date() } } },
       );
-    console.log(`${DATABASE} user history updated`);
-    res.statusStatus(200);
+    console.log(chalk.blue(`${DATABASE} user transactions updated`));
+    res.sendStatus(200);
   } catch (err) {
     console.log(chalk.red(`${ERROR} ${err}`));
     res.status(500).send({
       message: 'Internal error while getting cart',
-      detail: err,
+      detail: err + '',
     });
   }
 }

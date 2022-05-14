@@ -25,7 +25,7 @@ export async function requireToken(req, res, next) {
 }
 
 export async function validatePurchase(req, res, next) {
-  const { items, amount } = req;
+  const { items, amount } = req.body;
 
   const validate = purchaseSchema.validate(
     {
@@ -82,10 +82,7 @@ export async function userExists(_req, res, next) {
   const session = res.locals.session;
 
   try {
-    user = await db
-      .collection('accounts')
-      .findOne({ _id: new ObjectId(session.user_id) });
-
+    user = await db.collection('accounts').findOne({ _id: session.user_id });
     if (!user) {
       return res.status(404).send({
         message: 'User not found',
@@ -132,6 +129,8 @@ export async function areItemsInStock(_req, res, next) {
       notInStock.push(products[i].title);
     }
     items[i].title = products[i].title;
+    items[i].product_id = new ObjectId(items[i].id);
+    delete items[i].id;
   }
   if (notInStock.length > 0) {
     console.log(chalk.red(`${ERROR} Item not in stock`));
@@ -140,6 +139,5 @@ export async function areItemsInStock(_req, res, next) {
       detail: `${notInStock.join(', ')}`,
     });
   }
-  res.locals.items = items;
   next();
 }

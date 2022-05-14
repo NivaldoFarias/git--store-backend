@@ -33,10 +33,11 @@ export async function validateSignInSchema(req, res, next) {
 }
 
 export async function findUser(_req, res, next) {
+  let user = null;
   const { email } = res.locals;
 
   try {
-    const user = await db.collection('accounts').findOne({ email });
+    user = await db.collection('accounts').findOne({ email });
 
     if (!user) {
       console.log(chalk.bold.red(`${ERROR} User not found`));

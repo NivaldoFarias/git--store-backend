@@ -1,7 +1,6 @@
 import { Router } from 'express';
-// controllers
-import { register, login } from '../controllers/authController.js';
-// middlewares
+
+import * as auth from './../controllers/authController.js';
 import {
   validateSignUpSchema,
   validateEmail,
@@ -19,7 +18,7 @@ authRouter.post(
   '/api/auth/sign-up',
   validateSignUpSchema,
   validateEmail,
-  register,
+  auth.signUp,
 );
 authRouter.post(
   '/api/auth/sign-in',
@@ -27,7 +26,7 @@ authRouter.post(
   findUser,
   validatePassword,
   createToken,
-  login,
+  auth.signIn,
 );
 
 export default authRouter;

@@ -23,6 +23,7 @@
     "mongodb": "^4.5.0",
     "nodemon": "^2.0.16",
     "string-strip-html": "^9.1.12",
+    "url-exist": "^3.0.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

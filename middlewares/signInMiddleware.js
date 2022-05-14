@@ -3,10 +3,10 @@ import chalk from 'chalk';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
-import db from '../database/mongoClient.js';
-import SignInSchema from '../models/signIn.js';
+import db from './../database/mongoClient.js';
+import SignInSchema from './../models/signInSchema.js';
 
-import { ERROR } from '../blueprint/chalk.js';
+import { ERROR } from './../blueprint/chalk.js';
 
 export async function validateSignInSchema(req, res, next) {
   const { password } = req.body; // body = user

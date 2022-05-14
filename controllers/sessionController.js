@@ -21,9 +21,6 @@ export async function getProducts(_req, res) {
 }
 
 export async function purchase(_req, res) {
-  // TODO Verificar a quantidade disponivel de um produto e impedir de adicionar caso acabe o estoque
-  // TODO Criar funcao que desliga as sessoes ativas e caso a compra nao tenha sido efetuada, atualiza o estoque
-  // body: { items: array de _ids dos produtos na collection products; amount: total pago }
   const data = res.locals.data;
   const items = res.locals.items;
   const amount = res.locals.amount;

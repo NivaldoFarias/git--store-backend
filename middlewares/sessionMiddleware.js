@@ -2,9 +2,9 @@ import { ObjectId } from 'mongodb';
 import jwt from 'jsonwebtoken';
 import chalk from 'chalk';
 
-import purchaseSchema from './../models/purchase.js';
-import { ERROR } from './../blueprint/chalk.js';
-import db from './../database/mongoClient.js';
+import purchaseSchema from '../models/purchaseSchema.js';
+import { ERROR } from '../blueprint/chalk.js';
+import db from '../database/mongoClient.js';
 
 export async function requireToken(req, res, next) {
   const { authorization } = req.headers;

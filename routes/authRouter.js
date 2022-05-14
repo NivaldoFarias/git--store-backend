@@ -1,7 +1,6 @@
 import { Router } from 'express';
-// controllers
-import { register, login } from '../controllers/authController.js';
-// middlewares
+
+import { register, login } from './../controllers/authController.js';
 import {
   validateSignUpSchema,
   validateEmail,

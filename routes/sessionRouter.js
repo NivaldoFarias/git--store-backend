@@ -7,20 +7,20 @@ import {
   userExists,
   itemsExists,
   areItemsInStock,
-} from '../middlewares/userMiddleware.js';
-import * as user from '../controllers/userController.js';
+} from '../middlewares/sessionMiddleware.js';
+import * as session from '../controllers/sessionController.js';
 
 dotenv.config();
 
 const userRouter = express.Router();
-userRouter.get('/api/products', user.getProducts);
+userRouter.get('/api/products', session.getProducts);
 userRouter.put(
-  '/api/user/purchase',
+  '/api/session/purchase',
   requireToken,
   userExists,
   isUserOnline,
   itemsExists,
   areItemsInStock,
-  user.purchase,
+  session.purchase,
 );
 export default userRouter;

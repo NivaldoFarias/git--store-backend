@@ -10,9 +10,10 @@ export async function requireToken(req, res, next) {
   const { authorization } = req.headers;
   const token = authorization?.replace('Bearer ', '').trim();
   const secretKey = process.env.JWT_SECRET;
-  const data = jwt.verify(token, secretKey);
-
-  if (!data) {
+  try {
+    const data = jwt.verify(token, secretKey);
+    res.locals.data = data;
+  } catch (e) {
     console.log(chalk.red(`${ERROR} Invalid token`));
     return res.status(401).send({
       message: 'Invalid token',
@@ -20,7 +21,6 @@ export async function requireToken(req, res, next) {
     });
   }
 
-  res.locals.data = data;
   next();
 }
 
@@ -32,13 +32,13 @@ export async function validatePurchase(req, res, next) {
       items,
       amount,
     },
-    { abortEarly: false },
+    { abortEarly: false }
   );
   if (validate.error) {
     console.log(
       chalk.red(
-        `${ERROR} ${validate.error.details.map((e) => e.message).join(', ')}`,
-      ),
+        `${ERROR} ${validate.error.details.map((e) => e.message).join(', ')}`
+      )
     );
     return res.status(422).send({
       message: 'Invalid input',
@@ -52,7 +52,7 @@ export async function validatePurchase(req, res, next) {
 
 export async function isUserOnline(_req, res, next) {
   let session = null;
-  const data = res.locals.data;
+  const { data } = res.locals;
 
   try {
     session = await db
@@ -79,7 +79,7 @@ export async function isUserOnline(_req, res, next) {
 
 export async function userExists(_req, res, next) {
   let user = null;
-  const session = res.locals.session;
+  const { session } = res.locals;
 
   try {
     user = await db.collection('accounts').findOne({ _id: session.user_id });
@@ -102,10 +102,10 @@ export async function userExists(_req, res, next) {
 }
 
 export async function itemsExists(_req, res, next) {
-  const items = res.locals.items;
+  const { items } = res.locals;
   const products = await db
     .collection('products')
-    .find({ _id: { $in: items.map((item) => new ObjectId(item.id)) } })
+    .find({ _id: { $in: items.map((item) => new ObjectId(item._id)) } })
     .toArray();
 
   if (products.length !== items.length) {
@@ -120,9 +120,9 @@ export async function itemsExists(_req, res, next) {
 }
 
 export async function areItemsInStock(_req, res, next) {
-  const items = res.locals.items;
-  const products = res.locals.products;
-  let notInStock = [];
+  const { items } = res.locals;
+  const { products } = res.locals;
+  const notInStock = [];
 
   for (let i = 0; i < items.length; i++) {
     if (products[i].inventory < items[i].volume) {

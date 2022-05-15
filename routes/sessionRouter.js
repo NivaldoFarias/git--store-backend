@@ -6,9 +6,9 @@ import * as session from '../controllers/sessionController.js';
 
 dotenv.config();
 
-const userRouter = express.Router();
-userRouter.get('/api/products', session.getProducts);
-userRouter.post(
+const sessionRouter = express.Router();
+sessionRouter.get('/api/products', session.getProducts);
+sessionRouter.post(
   '/api/session/purchase',
   middleware.requireToken,
   middleware.validatePurchase,
@@ -16,6 +16,7 @@ userRouter.post(
   middleware.userExists,
   middleware.itemsExists,
   middleware.areItemsInStock,
-  session.purchase,
+  session.purchase
 );
-export default userRouter;
+sessionRouter.get('/api/sessions', middleware.requireToken, session.userOnline);
+export default sessionRouter;

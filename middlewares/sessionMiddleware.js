@@ -105,11 +105,11 @@ export async function itemsExists(_req, res, next) {
   const { items } = res.locals;
   const products = await db
     .collection('products')
-    .find({ _id: { $in: items.map((item) => new ObjectId(item._id)) } })
+    .find({ _id: { $in: items.map((item) => new ObjectId(item.product_id)) } })
     .toArray();
 
   if (products.length !== items.length) {
-    console.log(chalk.red(`${ERROR} Invalid item id`));
+    console.log(chalk.red(`${ERROR} Invalid item product_id`));
     return res.status(404).send({
       message: 'Invalid item id',
       detail: 'Ensure that the item id is valid',
@@ -129,8 +129,6 @@ export async function areItemsInStock(_req, res, next) {
       notInStock.push(products[i].title);
     }
     items[i].title = products[i].title;
-    items[i].product_id = new ObjectId(items[i].id);
-    delete items[i].id;
   }
   if (notInStock.length > 0) {
     console.log(chalk.red(`${ERROR} Item not in stock`));

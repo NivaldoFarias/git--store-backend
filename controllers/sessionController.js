@@ -57,26 +57,3 @@ export async function purchase(_req, res) {
     });
   }
 }
-
-export async function userOnline(_req, res) {
-  const { data } = res.locals;
-  console.log(data);
-
-  try {
-    const session = await db
-      .collection('sessions')
-      .findOne({ _id: new ObjectId(data.session_id) });
-
-    if (!session || !session.active) {
-      console.log(chalk.red(`${ERROR} Invalid token`));
-      return res.status(403).send({
-        message: 'Invalid token',
-        detail: 'Ensure to provide a valid token',
-      });
-    }
-  } catch (e) {
-    console.log(e);
-    res.sendStatus(500);
-  }
-  res.send(true);
-}

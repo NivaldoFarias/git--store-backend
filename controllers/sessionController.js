@@ -2,8 +2,8 @@ import dotenv from 'dotenv';
 import chalk from 'chalk';
 import { ObjectId } from 'mongodb';
 
-import db from './../database/mongoClient.js';
-import { DATABASE, ERROR } from './../blueprint/chalk.js';
+import db from '../database/mongoClient.js';
+import { DATABASE, ERROR } from '../blueprint/chalk.js';
 
 dotenv.config();
 
@@ -29,14 +29,14 @@ export async function purchase(_req, res) {
         await db
           .collection('products')
           .updateOne(
-            { _id: new ObjectId(items[i].product_id) },
-            { $inc: { inventory: -items[i].volume } },
+            { _id: new ObjectId(items[i]._id) },
+            { $inc: { inventory: -items[i].volume } }
           );
       } catch (err) {
         console.log(chalk.red(`${ERROR} ${err}`));
         res.status(500).send({
           message: 'Internal error while updating products',
-          detail: err + '',
+          detail: `${err}`,
         });
       }
     }
@@ -45,7 +45,7 @@ export async function purchase(_req, res) {
       .collection('accounts')
       .updateOne(
         { _id: new ObjectId(session.user_id) },
-        { $push: { transactions: { items, amount, date: new Date() } } },
+        { $push: { transactions: { items, amount, date: new Date() } } }
       );
     console.log(chalk.blue(`${DATABASE} user transactions updated`));
     res.sendStatus(200);
@@ -53,7 +53,30 @@ export async function purchase(_req, res) {
     console.log(chalk.red(`${ERROR} ${err}`));
     res.status(500).send({
       message: 'Internal error while getting cart',
-      detail: err + '',
+      detail: `${err}`,
     });
   }
+}
+
+export async function userOnline(req, res) {
+  const { data } = res.locals;
+  console.log(data);
+
+  try {
+    const session = await db
+      .collection('sessions')
+      .findOne({ _id: new ObjectId(data.session_id) });
+
+    if (!session || !session.active) {
+      console.log(chalk.red(`${ERROR} Invalid token`));
+      return res.status(403).send({
+        message: 'Invalid token',
+        detail: 'Ensure to provide a valid token',
+      });
+    }
+  } catch (e) {
+    console.log(e);
+    res.sendStatus(500);
+  }
+  res.send(true);
 }

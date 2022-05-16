@@ -19,4 +19,9 @@ sessionRouter.post(
   session.purchase
 );
 sessionRouter.get('/api/sessions', middleware.requireToken, session.userOnline);
+sessionRouter.put(
+  '/api/session/cart',
+  middleware.requireToken,
+  session.updateCart
+);
 export default sessionRouter;

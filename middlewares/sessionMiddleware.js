@@ -110,7 +110,7 @@ export async function itemsExists(_req, res, next) {
     .toArray();
 
   if (products.length !== items.length) {
-    console.log(chalk.red(`${ERROR} Invalid item id`));
+    console.log(chalk.red(`${ERROR} Invalid item product_id`));
     return res.status(404).send({
       message: 'Invalid item id',
       detail: 'Ensure that the item id is valid',

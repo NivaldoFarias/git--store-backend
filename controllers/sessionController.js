@@ -77,6 +77,6 @@ export async function userOnline(req, res) {
     console.log(e);
     res.sendStatus(500);
   }
-  res.send(true);
+  res.send();
 }
 

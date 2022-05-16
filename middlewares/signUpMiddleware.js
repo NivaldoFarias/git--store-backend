@@ -6,7 +6,7 @@ import SignUpSchema from '../models/signUpSchema.js';
 import { ERROR } from '../blueprint/chalk.js';
 
 export async function validateSignUpSchema(req, res, next) {
-  const password = req.body.password; // body = user
+  const { password } = req.body; // body = user
   const name = stripHtml(req.body.name).result.trim();
   const email = stripHtml(req.body.email).result.trim();
 
@@ -16,8 +16,9 @@ export async function validateSignUpSchema(req, res, next) {
       email,
       password,
     },
-    { abortEarly: false },
+    { abortEarly: false }
   );
+  console.log('teste');
   if (validate.error) {
     console.log(chalk.red(`${ERROR} Invalid input`));
     return res.status(422).send({
@@ -33,7 +34,7 @@ export async function validateSignUpSchema(req, res, next) {
 
 export async function validateEmail(_req, res, next) {
   const { email } = res.locals;
-  const user = await db.collection('accounts').findOne({ email: email });
+  const user = await db.collection('accounts').findOne({ email });
 
   if (user) {
     console.log(chalk.red(`${ERROR} Email already registered`));

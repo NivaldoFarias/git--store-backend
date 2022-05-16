@@ -18,4 +18,5 @@ sessionRouter.post(
   middleware.areItemsInStock,
   session.purchase
 );
+sessionRouter.get('/api/sessions', middleware.requireToken, session.userOnline);
 export default sessionRouter;

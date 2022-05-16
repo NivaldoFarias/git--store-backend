@@ -103,6 +103,7 @@ export async function userExists(_req, res, next) {
 
 export async function itemsExists(_req, res, next) {
   const { items } = res.locals;
+  console.log(items);
   const products = await db
     .collection('products')
     .find({ _id: { $in: items.map((item) => new ObjectId(item.product_id)) } })
@@ -123,6 +124,7 @@ export async function areItemsInStock(_req, res, next) {
   const { items } = res.locals;
   const { products } = res.locals;
   const notInStock = [];
+  console.log(items);
 
   for (let i = 0; i < items.length; i++) {
     if (products[i].inventory < items[i].volume) {

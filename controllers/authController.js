@@ -15,7 +15,7 @@ export async function signUp(_req, res) {
   try {
     await db
       .collection('accounts')
-      .insertOne({ name, email, password: cryptPass });
+      .insertOne({ name, email, password: cryptPass, transactions: [] });
     console.log(chalk.blue(`${DATABASE} - ${email} registered successfully`));
     res.sendStatus(201);
   } catch (err) {
@@ -42,7 +42,7 @@ export async function signIn(_req, res) {
       active: true,
     });
     console.log(
-      chalk.blue(`${DATABASE} - ${user.email} signed in successfully`),
+      chalk.blue(`${DATABASE} - ${user.email} signed in successfully`)
     );
     res.status(200).send(token);
   } catch (err) {

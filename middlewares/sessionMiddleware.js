@@ -103,9 +103,10 @@ export async function userExists(_req, res, next) {
 
 export async function itemsExists(_req, res, next) {
   const { items } = res.locals;
+  console.log(items);
   const products = await db
     .collection('products')
-    .find({ _id: { $in: items.map((item) => new ObjectId(item._id)) } })
+    .find({ _id: { $in: items.map((item) => new ObjectId(item.product_id)) } })
     .toArray();
 
   if (products.length !== items.length) {
@@ -123,14 +124,13 @@ export async function areItemsInStock(_req, res, next) {
   const { items } = res.locals;
   const { products } = res.locals;
   const notInStock = [];
+  console.log(items);
 
   for (let i = 0; i < items.length; i++) {
     if (products[i].inventory < items[i].volume) {
       notInStock.push(products[i].title);
     }
     items[i].title = products[i].title;
-    items[i].product_id = new ObjectId(items[i].id);
-    delete items[i].id;
   }
   if (notInStock.length > 0) {
     console.log(chalk.red(`${ERROR} Item not in stock`));

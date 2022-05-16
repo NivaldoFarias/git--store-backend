@@ -29,7 +29,7 @@ export async function purchase(_req, res) {
         await db
           .collection('products')
           .updateOne(
-            { _id: new ObjectId(items[i]._id) },
+            { _id: new ObjectId(items[i].product_id) },
             { $inc: { inventory: -items[i].volume } }
           );
       } catch (err) {
@@ -60,7 +60,6 @@ export async function purchase(_req, res) {
 
 export async function userOnline(req, res) {
   const { data } = res.locals;
-  console.log(data);
 
   try {
     const session = await db

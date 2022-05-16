@@ -112,3 +112,26 @@ export async function updateCart(req, res) {
     res.sendStatus(500);
   }
 }
+
+export async function getCart(req, res) {
+  const { data } = res.locals;
+
+  try {
+    const session = await db
+      .collection('sessions')
+      .findOne({ _id: new ObjectId(data.session_id), active: true });
+
+    if (!session) {
+      console.log(chalk.red(`${ERROR} Invalid token`));
+      return res.status(403).send({
+        message: 'Invalid token',
+        detail: 'Ensure to provide a valid token',
+      });
+    }
+
+    res.send(session.cart);
+  } catch (e) {
+    console.log(e);
+    res.sendStatus(500);
+  }
+}

@@ -16,7 +16,9 @@
     <a href="https://github.com/NivaldoFarias/git--store-frontend#readme"><strong>Front end code»</strong></a>
 </div>
 
-<!-- ![Banner](https://github.com/NivaldoFarias/projeto10-trackit/blob/main/src/assets/images/trackit-showroom.png) -->
+<br />
+
+![Banner](https://github.com/NivaldoFarias/git--store-frontend/blob/main/src/assets/git--store-showroom.png?raw=true)
 
 <!-- ABOUT THE PROJECT -->
 

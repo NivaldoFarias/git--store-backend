@@ -64,9 +64,9 @@ export async function userOnline(req, res) {
   try {
     const session = await db
       .collection('sessions')
-      .findOne({ _id: new ObjectId(data.session_id) });
+      .findOne({ _id: new ObjectId(data.session_id), active: true });
 
-    if (!session || !session.active) {
+    if (!session) {
       console.log(chalk.red(`${ERROR} Invalid token`));
       return res.status(403).send({
         message: 'Invalid token',
@@ -80,3 +80,58 @@ export async function userOnline(req, res) {
   res.send();
 }
 
+export async function updateCart(req, res) {
+  const { body } = req;
+  const { data } = res.locals;
+
+  // fazer validacao body
+
+  try {
+    const session = await db
+      .collection('sessions')
+      .findOne({ _id: new ObjectId(data.session_id), active: true });
+
+    if (!session) {
+      console.log(chalk.red(`${ERROR} Invalid token`));
+      return res.status(403).send({
+        message: 'Invalid token',
+        detail: 'Ensure to provide a valid token',
+      });
+    }
+
+    await db
+      .collection('sessions')
+      .updateOne(
+        { _id: new ObjectId(data.session_id), active: true },
+        { $set: { cart: body } }
+      );
+
+    res.send(body);
+  } catch (e) {
+    console.log(e);
+    res.sendStatus(500);
+  }
+}
+
+export async function getCart(req, res) {
+  const { data } = res.locals;
+
+  try {
+    const session = await db
+      .collection('sessions')
+      .findOne({ _id: new ObjectId(data.session_id), active: true });
+
+    if (!session) {
+      console.log(chalk.red(`${ERROR} Invalid token`));
+      return res.status(403).send({
+        message: 'Invalid token',
+        detail: 'Ensure to provide a valid token',
+      });
+    }
+
+    res.send(session.cart);
+  } catch (e) {
+    console.log(e);
+    res.sendStatus(500);
+  }
+}

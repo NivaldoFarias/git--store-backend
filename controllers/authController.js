@@ -33,13 +33,14 @@ export async function signIn(_req, res) {
   try {
     await db
       .collection('sessions')
-      .deleteOne({ user_id: new ObjectId(user._id) });
+      .updateOne({ user_id: new ObjectId(user._id), active: true }, {$set: {active: false}});
 
     await db.collection('sessions').insertOne({
       token,
       _id: sessionId,
       user_id: user._id,
       active: true,
+      cart: []
     });
     console.log(
       chalk.blue(`${DATABASE} - ${user.email} signed in successfully`)
